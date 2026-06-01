@@ -5,6 +5,7 @@ import 'theme/app_theme.dart';
 import 'models/match_model.dart';
 import 'widgets/live_dot.dart';
 import 'widgets/admin_modal.dart';
+import 'widgets/welcome_cover.dart';
 import 'screens/live_screen.dart';
 import 'screens/standings_screen.dart';
 import 'screens/scorers_screen.dart';
@@ -52,6 +53,7 @@ class TournamentShell extends StatefulWidget {
 }
 
 class _TournamentShellState extends State<TournamentShell> {
+  bool _showCover = true;
   int _activeTabIndex = 0;
   final ScrollController _tabScrollController = ScrollController();
 
@@ -269,6 +271,8 @@ class _TournamentShellState extends State<TournamentShell> {
       );
     }
 
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       body: SafeArea(
         child: Stack(
@@ -316,6 +320,27 @@ class _TournamentShellState extends State<TournamentShell> {
                   ),
                 ),
               ),
+
+            // Welcome Cover Overlay (Slides left and fades out)
+            AnimatedPositioned(
+              duration: const Duration(milliseconds: 750),
+              curve: Curves.easeInOutCubic,
+              left: _showCover ? 0 : -screenWidth,
+              right: _showCover ? 0 : screenWidth,
+              top: 0,
+              bottom: 0,
+              child: AnimatedOpacity(
+                duration: const Duration(milliseconds: 500),
+                opacity: _showCover ? 1.0 : 0.0,
+                child: WelcomeCover(
+                  onEnter: () {
+                    setState(() {
+                      _showCover = false;
+                    });
+                  },
+                ),
+              ),
+            ),
           ],
         ),
       ),
