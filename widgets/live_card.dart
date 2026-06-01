@@ -1,0 +1,424 @@
+import 'dart:async';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../models/match_model.dart';
+import '../models/team.dart';
+import '../providers/tournament_provider.dart';
+import '../theme/app_theme.dart';
+import 'team_badge.dart';
+import 'live_dot.dart';
+import 'goal_panel.dart';
+
+class LiveCard extends StatefulWidget {
+  final MatchModel match;
+
+  const LiveCard({
+    Key? key,
+    required this.match,
+  }) : super(key: key);
+
+  @override
+  State<LiveCard> createState() => _LiveCardState();
+}
+
+class _LiveCardState extends State<LiveCard> {
+  late int _minute;
+  Timer? _minuteTimer;
+
+  @override
+  void initState() {
+    super.initState();
+    // Inizializza a 48 minuti (o l'ultimo marcatore + 5 per realismo)
+    int initialMin = 48;
+    if (widget.match.scorers.isNotEmpty) {
+      final maxMin = widget.match.scorers.map((s) => s.min).reduce((a, b) => a > b ? a : b);
+      initialMin = maxMin + 5;
+    }
+    _minute = initialMin.clamp(1, 90);
+
+    _minuteTimer = Timer.periodic(const Duration(minutes: 1), (timer) {
+      if (mounted) {
+        setState(() {
+          if (_minute < 90) {
+            _minute++;
+          } else {
+            _minuteTimer?.cancel();
+          }
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _minuteTimer?.cancel();
+    super.dispose();
+  }
+
+  void _openGoalModal(String side) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return GoalPanel(
+          match: widget.match,
+          side: side,
+          timer: _minute,
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final provider = Provider.of<TournamentProvider>(context);
+    final ht = provider.teams.firstWhere((t) => t.id == widget.match.home, orElse: () => Team(id: 0, name: "", group: "", color: 0, players: []));
+    final at = provider.teams.firstWhere((t) => t.id == widget.match.away, orElse: () => Team(id: 0, name: "", group: "", color: 0, players: []));
+
+    final homeScorers = widget.match.scorers.where((s) => s.team == widget.match.home).toList();
+    final awayScorers = widget.match.scorers.where((s) => s.team == widget.match.away).toList();
+
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.cardBg,
+        border: Border.all(color: AppColors.border),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      clipBehavior: Clip.hardEdge,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // Barra a gradiente neon in alto (coordinata con il logo)
+          Container(
+            height: 3,
+            decoration: const BoxDecoration(
+              gradient: AppColors.logoGradient,
+            ),
+          ),
+          // Header
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            decoration: const BoxDecoration(
+              border: Border(bottom: BorderSide(color: AppColors.border)),
+              color: AppColors.cardBg,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Girone ${widget.match.group} · ${widget.match.day}",
+                  style: const TextStyle(
+                    fontSize: 10,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.textTertiary,
+                    letterSpacing: 1.0,
+                  ),
+                ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const LiveDot(),
+                    const SizedBox(width: 8),
+                    Text(
+                      "$_minute'",
+                      style: const TextStyle(
+                        color: AppColors.accent,
+                        fontWeight: FontWeight.w900,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          
+          // Match main body (scores & badges)
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+            child: Row(
+              children: [
+                // Team Casa
+                Expanded(
+                  child: Column(
+                    children: [
+                      TeamBadge(team: ht, size: BadgeSize.lg),
+                      const SizedBox(height: 8),
+                      Text(
+                        ht.name,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                
+                // Giant Score Display
+                Column(
+                  children: [
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          "${widget.match.homeGoals}",
+                          style: AppTextStyles.score,
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 8.0),
+                          child: Text(
+                            "–",
+                            style: AppTextStyles.scoreDivider,
+                          ),
+                        ),
+                        Text(
+                          "${widget.match.awayGoals}",
+                          style: AppTextStyles.score,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                
+                // Team Trasferta
+                Expanded(
+                  child: Column(
+                    children: [
+                      TeamBadge(team: at, size: BadgeSize.lg),
+                      const SizedBox(height: 8),
+                      Text(
+                        at.name,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          // Scorers list section
+          if (widget.match.scorers.isNotEmpty) ...[
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: const BoxDecoration(
+                border: Border(top: BorderSide(color: AppColors.border)),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const Text(
+                    "MARCATORI",
+                    style: TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w900,
+                      color: AppColors.textTertiary,
+                      letterSpacing: 1.5,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Home Scorers
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: homeScorers.map((s) {
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 2.0),
+                              child: Row(
+                                children: [
+                                  const Text("⚽", style: TextStyle(fontSize: 11)),
+                                  const SizedBox(width: 4),
+                                  Expanded(
+                                    child: Text(
+                                      s.own ? "Autogol" : "#${s.n} ${s.player}",
+                                      style: TextStyle(
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.bold,
+                                        color: s.own ? AppColors.error : AppColors.textSecondary,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                  Text(
+                                    "${s.min}'",
+                                    style: const TextStyle(
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.bold,
+                                      color: AppColors.accent,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                      
+                      // Central separator line
+                      Container(
+                        width: 1,
+                        height: 40,
+                        color: AppColors.border,
+                        margin: const EdgeInsets.symmetric(horizontal: 12),
+                      ),
+                      
+                      // Away Scorers
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: awayScorers.map((s) {
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 2.0),
+                              child: Row(
+                                children: [
+                                  const Text("⚽", style: TextStyle(fontSize: 11)),
+                                  const SizedBox(width: 4),
+                                  Expanded(
+                                    child: Text(
+                                      s.own ? "Autogol" : "#${s.n} ${s.player}",
+                                      style: TextStyle(
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.bold,
+                                        color: s.own ? AppColors.error : AppColors.textSecondary,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                  Text(
+                                    "${s.min}'",
+                                    style: const TextStyle(
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.bold,
+                                      color: AppColors.accent,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+          
+          // Admin controls panel (if authorized)
+          if (provider.adminMode) ...[
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: AppColors.accent.withOpacity(0.04),
+                border: const Border(top: BorderSide(color: AppColors.border)),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const Text(
+                    "🔓 CONTROLLI ADMIN",
+                    style: TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w900,
+                      color: AppColors.accent,
+                      letterSpacing: 1.5,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () => _openGoalModal('home'),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            decoration: BoxDecoration(
+                              color: AppColors.surfaceBg,
+                              border: Border.all(color: AppColors.borderDark),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Center(
+                              child: Text(
+                                "⚽ Goal ${ht.name.split(' ')[0]}",
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.textPrimary,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () => _openGoalModal('away'),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            decoration: BoxDecoration(
+                              color: AppColors.surfaceBg,
+                              border: Border.all(color: AppColors.borderDark),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Center(
+                              child: Text(
+                                "⚽ Goal ${at.name.split(' ')[0]}",
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.textPrimary,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  
+                  // End Match button
+                  GestureDetector(
+                    onTap: () => provider.endMatch(widget.match.id),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      decoration: BoxDecoration(
+                        color: AppColors.error.withOpacity(0.15),
+                        border: Border.all(color: AppColors.error.withOpacity(0.3)),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: const Center(
+                        child: Text(
+                          "🏁 Termina Partita",
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w900,
+                            color: AppColors.error,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
