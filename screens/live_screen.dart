@@ -25,8 +25,18 @@ class _LiveScreenState extends State<LiveScreen> {
       orElse: () => MatchModel(id: "", group: "", day: "", time: ""),
     );
 
-    final upcoming = provider.matches.where((m) => m.status == MatchStatus.sched).take(5).toList();
     final allSchedMatches = provider.matches.where((m) => m.status == MatchStatus.sched).toList();
+    
+    // Ordina cronologicamente: Sabato prima di Domenica, poi per orario di gioco
+    allSchedMatches.sort((a, b) {
+      if (a.day != b.day) {
+        if (a.day.contains("Sab")) return -1;
+        if (b.day.contains("Sab")) return 1;
+      }
+      return a.time.compareTo(b.time);
+    });
+
+    final upcoming = allSchedMatches.take(5).toList();
 
     final hasLive = liveMatch.id.isNotEmpty;
 

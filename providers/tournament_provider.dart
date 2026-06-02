@@ -13,12 +13,18 @@ class TournamentProvider extends ChangeNotifier {
   bool adminMode = false;
   bool loaded = false;
   bool goalFlash = false;
+  String adminPin = "123456"; // PIN predefinito
 
   // Caricamento da SharedPreferences
   Future<void> loadData() async {
     try {
       final prefs = await SharedPreferences.getInstance();
       
+      final savedPin = prefs.getString('lozzo-admin-pin');
+      if (savedPin != null) {
+        adminPin = savedPin;
+      }
+
       final rawTeams = prefs.getString('lozzo-teams');
       if (rawTeams != null) {
         final list = jsonDecode(rawTeams) as List;
@@ -66,8 +72,55 @@ class TournamentProvider extends ChangeNotifier {
     } catch (_) {}
   }
 
+  // Resetta tutto il torneo ai dati di fabbrica
+  Future<void> resetTournament() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      
+      // Creiamo la lista pulita di tutte le partite dei gironi (A1-D8) partendo dalle date/ore di fabbrica
+      final cleanMatches = INITIAL_MATCHES.map((m) {
+        return MatchModel(
+          id: m.id,
+          group: m.group,
+          home: m.home,
+          away: m.away,
+          day: m.day,
+          time: m.time,
+          status: MatchStatus.sched,
+          homeGoals: 0,
+          awayGoals: 0,
+          scorers: [],
+          phase: m.phase,
+        );
+      }).toList();
+
+      // Elimina il tabellone KO
+      cleanMatches.removeWhere((m) => m.group == "KO");
+
+      // Salva le partite azzerate nelle preferenze
+      await prefs.setString(
+        'lozzo-matches',
+        jsonEncode(cleanMatches.map((m) => m.toJson()).toList()),
+      );
+
+      // Aggiorna lo stato in memoria del provider senza toccare le squadre/formazioni!
+      matches = cleanMatches;
+      adminMode = false;
+    } catch (_) {}
+    notifyListeners();
+  }
+
   // Admin
-  bool verifyPin(String pin) => pin == "1234";
+  bool verifyPin(String pin) => pin == adminPin;
+
+  Future<void> changePin(String newPin) async {
+    adminPin = newPin;
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('lozzo-admin-pin', newPin);
+    } catch (_) {}
+    notifyListeners();
+  }
 
   void toggleAdmin() {
     adminMode = !adminMode;
@@ -110,10 +163,21 @@ class TournamentProvider extends ChangeNotifier {
       
       int homeG = match.homeGoals;
       int awayG = match.awayGoals;
-      if (side == 'home') {
-        homeG++;
+      
+      if (scorer.own) {
+        // Se è un autogol, il punto va all'avversario!
+        if (side == 'home') {
+          awayG++;
+        } else {
+          homeG++;
+        }
       } else {
-        awayG++;
+        // Gol normale: il punto va alla squadra indicata da side
+        if (side == 'home') {
+          homeG++;
+        } else {
+          awayG++;
+        }
       }
 
       matches[idx] = MatchModel(

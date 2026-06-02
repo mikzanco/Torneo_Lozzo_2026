@@ -143,8 +143,8 @@ class _ResultsScreenState extends State<ResultsScreen> {
                       final ht = provider.teams.firstWhere((t) => t.id == m.home, orElse: () => Team(id: 0, name: "", group: "", color: 0, players: []));
                       final at = provider.teams.firstWhere((t) => t.id == m.away, orElse: () => Team(id: 0, name: "", group: "", color: 0, players: []));
 
-                      final homeScorers = m.scorers.where((s) => s.team == m.home).toList();
-                      final awayScorers = m.scorers.where((s) => s.team == m.away).toList();
+                      final homeScorers = m.scorers.where((s) => (s.team == m.home && !s.own) || (s.team == m.away && s.own)).toList();
+                      final awayScorers = m.scorers.where((s) => (s.team == m.away && !s.own) || (s.team == m.home && s.own)).toList();
 
                       final homeWon = m.homeGoals > m.awayGoals;
                       final awayWon = m.awayGoals > m.homeGoals;
@@ -258,7 +258,9 @@ class _ResultsScreenState extends State<ResultsScreen> {
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: homeScorers.map((s) {
                                           return Text(
-                                            s.own ? "Autogol ${s.min}'" : "${s.player} ${s.min}'",
+                                            s.own 
+                                                ? (s.player != null ? "${s.player} (A.G.) ${s.min}'" : "Autogol (A.G.) ${s.min}'")
+                                                : "${s.player} ${s.min}'",
                                             style: TextStyle(
                                               fontSize: 10,
                                               fontWeight: FontWeight.bold,
@@ -276,7 +278,9 @@ class _ResultsScreenState extends State<ResultsScreen> {
                                         crossAxisAlignment: CrossAxisAlignment.end,
                                         children: awayScorers.map((s) {
                                           return Text(
-                                            s.own ? "Autogol ${s.min}'" : "${s.player} ${s.min}'",
+                                            s.own 
+                                                ? (s.player != null ? "${s.player} (A.G.) ${s.min}'" : "Autogol (A.G.) ${s.min}'")
+                                                : "${s.player} ${s.min}'",
                                             style: TextStyle(
                                               fontSize: 10,
                                               fontWeight: FontWeight.bold,

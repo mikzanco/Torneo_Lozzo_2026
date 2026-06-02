@@ -387,6 +387,288 @@ class _TeamsScreenState extends State<TeamsScreen> {
               ],
             ),
           ),
+          
+          const SizedBox(height: 20),
+
+          // Pulsante Cambia PIN (Solo per Admin loggati)
+          GestureDetector(
+            onTap: () {
+              final pinController1 = TextEditingController();
+              final pinController2 = TextEditingController();
+              final formKey = GlobalKey<FormState>();
+              
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  backgroundColor: AppColors.cardBg,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                    side: const BorderSide(color: AppColors.border),
+                  ),
+                  title: const Row(
+                    children: [
+                      Text("🔑 ", style: TextStyle(fontSize: 18)),
+                      Text(
+                        "Cambia PIN Admin",
+                        style: TextStyle(
+                          color: AppColors.white,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                    ],
+                  ),
+                  content: Form(
+                    key: formKey,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        const Text(
+                          "Inserisci un nuovo codice numerico di esattamente 4 cifre per blindare l'accesso.",
+                          style: TextStyle(
+                            color: AppColors.textTertiary,
+                            fontSize: 12,
+                            height: 1.4,
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        TextFormField(
+                          controller: pinController1,
+                          obscureText: true,
+                          keyboardType: TextInputType.number,
+                          maxLength: 4,
+                          style: const TextStyle(
+                            color: AppColors.white,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 8.0,
+                            fontSize: 18,
+                          ),
+                          textAlign: TextAlign.center,
+                          decoration: InputDecoration(
+                            hintText: "Nuovo PIN",
+                            hintStyle: const TextStyle(
+                              color: AppColors.textDim,
+                              letterSpacing: 0,
+                            ),
+                            counterText: "",
+                            filled: true,
+                            fillColor: AppColors.inputBg,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide.none,
+                            ),
+                          ),
+                          validator: (val) {
+                            if (val == null || val.length != 4 || int.tryParse(val) == null) {
+                              return "Inserisci 4 cifre numeriche";
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 12),
+                        TextFormField(
+                          controller: pinController2,
+                          obscureText: true,
+                          keyboardType: TextInputType.number,
+                          maxLength: 4,
+                          style: const TextStyle(
+                            color: AppColors.white,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 8.0,
+                            fontSize: 18,
+                          ),
+                          textAlign: TextAlign.center,
+                          decoration: InputDecoration(
+                            hintText: "Conferma PIN",
+                            hintStyle: const TextStyle(
+                              color: AppColors.textDim,
+                              letterSpacing: 0,
+                            ),
+                            counterText: "",
+                            filled: true,
+                            fillColor: AppColors.inputBg,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide.none,
+                            ),
+                          ),
+                          validator: (val) {
+                            if (val != pinController1.text) {
+                              return "I codici non coincidono";
+                            }
+                            return null;
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text(
+                        "Annulla",
+                        style: TextStyle(
+                          color: AppColors.textTertiary,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.accent,
+                        foregroundColor: AppColors.black,
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                      ),
+                      onPressed: () {
+                        if (formKey.currentState!.validate()) {
+                          provider.changePin(pinController1.text.trim());
+                          Navigator.pop(context);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text("Nuovo PIN configurato e salvato con successo!"),
+                              backgroundColor: AppColors.success,
+                            ),
+                          );
+                        }
+                      },
+                      child: const Text(
+                        "Salva",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w900,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              decoration: BoxDecoration(
+                color: AppColors.accent.withOpacity(0.08),
+                border: Border.all(color: AppColors.accent.withOpacity(0.3)),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("🔑", style: TextStyle(fontSize: 15)),
+                  SizedBox(width: 8),
+                  Text(
+                    "CAMBIA PIN ADMIN",
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w900,
+                      color: AppColors.accent,
+                      letterSpacing: 1.0,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          const SizedBox(height: 12),
+
+          // Pulsante di Reset Torneo (Solo per Admin loggati)
+          GestureDetector(
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  backgroundColor: AppColors.cardBg,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                    side: const BorderSide(color: AppColors.border),
+                  ),
+                  title: const Text(
+                    "🧹 Resetta Torneo?",
+                    style: TextStyle(
+                      color: AppColors.white,
+                      fontWeight: FontWeight.w900,
+                    ),
+                  ),
+                  content: const Text(
+                    "Sei sicuro di voler azzerare tutti i risultati, le partite e le classifiche? Questa azione ripristinerà i dati iniziali del torneo e non può essere annullata.",
+                    style: TextStyle(
+                      color: AppColors.textSecondary,
+                      height: 1.4,
+                      fontSize: 13,
+                    ),
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text(
+                        "Annulla",
+                        style: TextStyle(
+                          color: AppColors.textTertiary,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.error,
+                        foregroundColor: AppColors.white,
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                      ),
+                      onPressed: () {
+                        provider.resetTournament();
+                        Navigator.pop(context);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text("Torneo ripristinato ai dati iniziali con successo!"),
+                            backgroundColor: AppColors.success,
+                          ),
+                        );
+                      },
+                      child: const Text(
+                        "Sì, Resetta",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w900,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              decoration: BoxDecoration(
+                color: AppColors.error.withOpacity(0.08),
+                border: Border.all(color: AppColors.error.withOpacity(0.3)),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("🧹", style: TextStyle(fontSize: 15)),
+                  SizedBox(width: 8),
+                  Text(
+                    "RESETTA TUTTO IL TORNEO",
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w900,
+                      color: AppColors.error,
+                      letterSpacing: 1.0,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );

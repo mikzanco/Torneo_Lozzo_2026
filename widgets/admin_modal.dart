@@ -48,9 +48,9 @@ class _AdminModalState extends State<AdminModal> with SingleTickerProviderStateM
         if (_pin.isNotEmpty) {
           _pin = _pin.substring(0, _pin.length - 1);
         }
-      } else if (_pin.length < 4) {
+      } else if (_pin.length < 6) {
         _pin += key;
-        if (_pin.length == 4) {
+        if (_pin.length == 6) {
           // Auto-submit
           Future.delayed(const Duration(milliseconds: 150), () {
             _submitPin();
@@ -85,7 +85,7 @@ class _AdminModalState extends State<AdminModal> with SingleTickerProviderStateM
   Widget _buildPinBoxes() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: List.generate(4, (i) {
+      children: List.generate(6, (i) {
         final filled = _pin.length > i;
         return Container(
           width: 48,

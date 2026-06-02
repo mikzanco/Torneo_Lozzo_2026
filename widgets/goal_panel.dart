@@ -92,11 +92,22 @@ class _GoalPanelState extends State<GoalPanel> {
     final min = int.tryParse(_minuteController.text.trim()) ?? widget.timer;
 
     ScorerEvent scorer;
+    final numStr = _numberController.text.trim();
+    final n = int.tryParse(numStr);
+
     if (_isOwnGoal) {
-      scorer = ScorerEvent(team: teamId, own: true, min: min);
+      if (n != null && _resolvedPlayerName != null) {
+        scorer = ScorerEvent(
+          team: teamId,
+          player: _resolvedPlayerName,
+          n: n,
+          min: min,
+          own: true,
+        );
+      } else {
+        scorer = ScorerEvent(team: teamId, own: true, min: min);
+      }
     } else {
-      final numStr = _numberController.text.trim();
-      final n = int.tryParse(numStr);
       if (n == null) {
         setState(() => _showError = true);
         return;
@@ -162,7 +173,7 @@ class _GoalPanelState extends State<GoalPanel> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "⚽ Goal — ${team.name}",
+                        _isOwnGoal ? "⚠ Autogol — ${team.name}" : "⚽ Goal — ${team.name}",
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w900,
@@ -170,9 +181,11 @@ class _GoalPanelState extends State<GoalPanel> {
                         ),
                       ),
                       const SizedBox(height: 2),
-                      const Text(
-                        "Inserisci i dettagli del marcatore",
-                        style: TextStyle(
+                      Text(
+                        _isOwnGoal 
+                            ? "Seleziona chi ha commesso l'autogol (opzionale)"
+                            : "Inserisci i dettagli del marcatore",
+                        style: const TextStyle(
                           fontSize: 12,
                           color: AppColors.textTertiary,
                           fontWeight: FontWeight.w600,
@@ -190,7 +203,12 @@ class _GoalPanelState extends State<GoalPanel> {
               children: [
                 Expanded(
                   child: GestureDetector(
-                    onTap: () => setState(() => _isOwnGoal = false),
+                    onTap: () {
+                      setState(() {
+                        _isOwnGoal = false;
+                        _validatePlayerNumber();
+                      });
+                    },
                     child: AnimatedContainer(
                       duration: const Duration(milliseconds: 200),
                       padding: const EdgeInsets.symmetric(vertical: 12),
@@ -217,7 +235,12 @@ class _GoalPanelState extends State<GoalPanel> {
                 const SizedBox(width: 8),
                 Expanded(
                   child: GestureDetector(
-                    onTap: () => setState(() => _isOwnGoal = true),
+                    onTap: () {
+                      setState(() {
+                        _isOwnGoal = true;
+                        _validatePlayerNumber();
+                      });
+                    },
                     child: AnimatedContainer(
                       duration: const Duration(milliseconds: 200),
                       padding: const EdgeInsets.symmetric(vertical: 12),
@@ -245,18 +268,17 @@ class _GoalPanelState extends State<GoalPanel> {
             ),
             const SizedBox(height: 20),
 
-            // Se regolare, inserisci il numero di maglia
-            if (!_isOwnGoal) ...[
-              const Text(
-                "NUMERO MAGLIA",
-                style: TextStyle(
-                  fontSize: 10,
-                  fontWeight: FontWeight.w900,
-                  color: AppColors.textTertiary,
-                  letterSpacing: 1.5,
-                ),
+            // Numero di maglia (Sempre visibile, ma opzionale per l'autogol)
+            Text(
+              _isOwnGoal ? "NUMERO MAGLIA DI CHI HA COMMESSO L'AUTOGOL (OPZIONALE)" : "NUMERO MAGLIA",
+              style: const TextStyle(
+                fontSize: 10,
+                fontWeight: FontWeight.w900,
+                color: AppColors.textTertiary,
+                letterSpacing: 1.5,
               ),
-              const SizedBox(height: 8),
+            ),
+            const SizedBox(height: 8),
               TextField(
                 controller: _numberController,
                 keyboardType: TextInputType.number,
@@ -310,7 +332,6 @@ class _GoalPanelState extends State<GoalPanel> {
                 ),
               ),
               const SizedBox(height: 12),
-            ],
 
             // Minuto di gioco
             const Text(

@@ -76,8 +76,8 @@ class _LiveCardState extends State<LiveCard> {
     final ht = provider.teams.firstWhere((t) => t.id == widget.match.home, orElse: () => Team(id: 0, name: "", group: "", color: 0, players: []));
     final at = provider.teams.firstWhere((t) => t.id == widget.match.away, orElse: () => Team(id: 0, name: "", group: "", color: 0, players: []));
 
-    final homeScorers = widget.match.scorers.where((s) => s.team == widget.match.home).toList();
-    final awayScorers = widget.match.scorers.where((s) => s.team == widget.match.away).toList();
+    final homeScorers = widget.match.scorers.where((s) => (s.team == widget.match.home && !s.own) || (s.team == widget.match.away && s.own)).toList();
+    final awayScorers = widget.match.scorers.where((s) => (s.team == widget.match.away && !s.own) || (s.team == widget.match.home && s.own)).toList();
 
     return Container(
       decoration: BoxDecoration(
@@ -242,7 +242,9 @@ class _LiveCardState extends State<LiveCard> {
                                   const SizedBox(width: 4),
                                   Expanded(
                                     child: Text(
-                                      s.own ? "Autogol" : "#${s.n} ${s.player}",
+                                      s.own 
+                                          ? (s.player != null ? "#${s.n} ${s.player} (A.G.)" : "Autogol (A.G.)")
+                                          : "#${s.n} ${s.player}",
                                       style: TextStyle(
                                         fontSize: 11,
                                         fontWeight: FontWeight.bold,
@@ -287,7 +289,9 @@ class _LiveCardState extends State<LiveCard> {
                                   const SizedBox(width: 4),
                                   Expanded(
                                     child: Text(
-                                      s.own ? "Autogol" : "#${s.n} ${s.player}",
+                                      s.own 
+                                          ? (s.player != null ? "#${s.n} ${s.player} (A.G.)" : "Autogol (A.G.)")
+                                          : "#${s.n} ${s.player}",
                                       style: TextStyle(
                                         fontSize: 11,
                                         fontWeight: FontWeight.bold,
