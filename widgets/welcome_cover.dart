@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../theme/app_theme.dart';
 
 class WelcomeCover extends StatefulWidget {
@@ -43,6 +44,21 @@ class _WelcomeCoverState extends State<WelcomeCover> with SingleTickerProviderSt
   void dispose() {
     _ballController.dispose();
     super.dispose();
+  }
+
+  Future<void> _launchURL(String urlString) async {
+    final Uri url = Uri.parse(urlString);
+    try {
+      if (await canLaunchUrl(url)) {
+        await launchUrl(url, mode: LaunchMode.externalApplication);
+      } else {
+        await launchUrl(url);
+      }
+    } catch (_) {
+      try {
+        await launchUrl(url);
+      } catch (_) {}
+    }
   }
 
   @override
@@ -405,12 +421,12 @@ class _WelcomeCoverState extends State<WelcomeCover> with SingleTickerProviderSt
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         _buildSocialItem(
-                          icon: "f",
-                          label: "TORNEO DI LOZZO",
+                          label: "@Torneo_Lozzo",
+                          url: "https://www.instagram.com/Torneo_Lozzo/",
                         ),
                         _buildSocialItem(
-                          icon: "📸",
-                          label: "TORNEO_LOZZO",
+                          label: "@fatti.di.lozzo",
+                          url: "https://www.instagram.com/fatti.di.lozzo/",
                         ),
                       ],
                     ),
@@ -424,39 +440,104 @@ class _WelcomeCoverState extends State<WelcomeCover> with SingleTickerProviderSt
     );
   }
 
-  Widget _buildSocialItem({required String icon, required String label}) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-          width: 20,
-          height: 20,
-          decoration: const BoxDecoration(
-            color: AppColors.white,
-            shape: BoxShape.circle,
-          ),
-          child: Center(
-            child: Text(
-              icon,
-              style: const TextStyle(
-                color: Colors.black,
-                fontSize: 10,
-                fontWeight: FontWeight.w900,
-              ),
+  Widget _buildSocialItem({required String label, required String url}) {
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: () => _launchURL(url),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          decoration: BoxDecoration(
+            color: AppColors.white.withOpacity(0.04),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: AppColors.white.withOpacity(0.08),
+              width: 1,
             ),
           ),
-        ),
-        const SizedBox(width: 6),
-        Text(
-          label,
-          style: const TextStyle(
-            color: AppColors.textTertiary,
-            fontSize: 9,
-            fontWeight: FontWeight.w800,
-            letterSpacing: 0.5,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const InstagramIcon(size: 16),
+              const SizedBox(width: 8),
+              Text(
+                label,
+                style: const TextStyle(
+                  color: AppColors.textSecondary,
+                  fontSize: 11,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: 0.5,
+                ),
+              ),
+            ],
           ),
         ),
-      ],
+      ),
+    );
+  }
+}
+
+class InstagramIcon extends StatelessWidget {
+  final double size;
+
+  const InstagramIcon({
+    Key? key,
+    this.size = 20,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(size * 0.28),
+        gradient: const LinearGradient(
+          colors: [
+            Color(0xFFF9187C), // Pinkish red
+            Color(0xFFBC2A8D), // Purple
+            Color(0xFFE3372E), // Coral
+            Color(0xFFFCAF45), // Orange-yellow
+          ],
+          begin: Alignment.bottomLeft,
+          end: Alignment.topRight,
+        ),
+      ),
+      alignment: Alignment.center,
+      child: Container(
+        width: size * 0.65,
+        height: size * 0.65,
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.white, width: size * 0.06),
+          borderRadius: BorderRadius.circular(size * 0.18),
+        ),
+        alignment: Alignment.center,
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Container(
+              width: size * 0.28,
+              height: size * 0.28,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(color: Colors.white, width: size * 0.06),
+              ),
+            ),
+            Positioned(
+              top: size * 0.05,
+              right: size * 0.05,
+              child: Container(
+                width: size * 0.08,
+                height: size * 0.08,
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.circle,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
