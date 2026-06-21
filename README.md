@@ -125,6 +125,33 @@ Il sito web aggiornato è immediatamente raggiungibile all'indirizzo:
 
 ---
 
+## ⚽ Regolamento Ufficiale Futsal & Algoritmi di Gioco
+
+L'applicazione integra i criteri formali del regolamento ufficiale del calcio a 5 (Futsal) per garantire calcoli automatici e corretti:
+
+### 1. Classificazione Gironi & Pari Punti
+* **Vittoria/Pareggio**: 3 punti per la vittoria, 1 punto per il pareggio.
+* **2 Squadre a pari punti**: Risolto tramite **scontro diretto** (la vincente dello scontro diretto si posiziona sopra).
+* **3 o più Squadre a pari punti**: Risolto tramite **Classifica Avulsa** (calcolo dei punti, differenza reti e gol fatti considerando esclusivamente le partite giocate tra le sole squadre a pari punti), seguito eventualmente da differenza reti totale, reti segnate totali e sorteggio.
+
+### 2. Struttura del Tabellone KO
+Il tabellone ad eliminazione diretta comprende **5 fasi**:
+1. **Ottavi di Finale** (`OT1` - `OT8`)
+2. **Quarti di Finale** (`QF1` - `QF4`)
+3. **Semifinali** (`SF1` - `SF2`)
+4. **Finale 3°/4° posto** (`F3`)
+5. 🏆 **Finale** (`F`)
+
+### 3. Risoluzione dei Pareggi KO
+* **Ottavi di Finale**: In caso di pareggio, si qualifica direttamente la squadra meglio classificata nei gironi (corrispondente alla squadra in casa).
+* **Fasi Successive (Quarti, Semis, Finali)**: In caso di pareggio, si procede con **tempi supplementari (5 minuti con Golden Goal)**. Se il pareggio persiste, si passa ai **calci di rigore** (3 rigori iniziali, poi ad oltranza).
+
+### 4. Gestione dei Falli Cumulativi
+* Sono concessi **5 falli** per squadra per ogni incontro ad eliminazione diretta.
+* A partire dal **6° fallo**, scatta la penalità di **Tiro Libero** diretto (senza barriera né ribattuta). L'applicazione evidenzia dinamicamente lo stato di bonus esaurito con avvisi grafici dedicati in tempo reale.
+
+---
+
 ## 💻 Sviluppo & Test in Locale
 
 Se desideri apportare modifiche al codice sul tuo computer e provarle prima di caricarle online:
@@ -147,6 +174,6 @@ Se desideri apportare modifiche al codice sul tuo computer e provarle prima di c
 * **Accesso**: Clicca sul lucchetto 🔒 in alto a destra.
 * **PIN di Default**: **`123456`**
 * **Funzioni Admin**:
-  * **Fase Gironi**: Avviare le partite e inserire i gol (con marcatore o autogol). Terminando la partita la classifica si aggiorna istantaneamente.
-  * **Fase Finale (Eliminazione diretta)**: Al termine dei gironi, l'Admin può cliccare sul tab *Tabellone* e premere **Genera Tabellone**. Il sistema calcola automaticamente gli accoppiamenti (1° contro 4°, 2° contro 3°) e posiziona le squadre. Le successive semifinali e finali si popolano dinamicamente man mano che si terminano i quarti di finale.
-  * **Reset Torneo**: Nel tab **⚙️ Squadre**, in fondo alla pagina, l'Admin ha a disposizione il tasto **RESETTA TUTTO IL TORNEO** per ripulire interamente il database Firebase e ricominciare da zero (punteggi 0-0 e partite da disputare).
+  * **Fase Gironi**: Avviare le partite, inserire i gol (scegliendo il marcatore o autogol) e aggiornare i falli.
+  * **Fase Finale (Eliminazione diretta)**: Generare il tabellone KO al termine dei gironi. In caso di pareggio dai Quarti in poi, impostare il toggle *Supplementari (D.T.S.)* e registrare i calci di rigore prima di poter terminare la partita.
+  * **Reset Torneo**: Nella scheda **⚙️ Squadre**, cliccare su **RESETTA TUTTO IL TORNEO** per azzerare e rigenerare le partite vuote su Firestore.
