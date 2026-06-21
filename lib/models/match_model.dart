@@ -16,6 +16,9 @@ class MatchModel {
   String? phase;         // "QF", "SF", "F" per partite KO
   int homeFouls;
   int awayFouls;
+  int? homePenalties;
+  int? awayPenalties;
+  bool isExtraTime;
 
   MatchModel({
     required this.id,
@@ -31,6 +34,9 @@ class MatchModel {
     this.phase,
     this.homeFouls = 0,
     this.awayFouls = 0,
+    this.homePenalties,
+    this.awayPenalties,
+    this.isExtraTime = false,
   });
 
   Map<String, dynamic> toJson() => {
@@ -47,6 +53,9 @@ class MatchModel {
         'phase': phase,
         'homeFouls': homeFouls,
         'awayFouls': awayFouls,
+        'homePenalties': homePenalties,
+        'awayPenalties': awayPenalties,
+        'isExtraTime': isExtraTime,
       };
 
   factory MatchModel.fromJson(Map<String, dynamic> j) => MatchModel(
@@ -68,5 +77,8 @@ class MatchModel {
         phase: j['phase'] as String?,
         homeFouls: j['homeFouls'] as int? ?? 0,
         awayFouls: j['awayFouls'] as int? ?? 0,
+        homePenalties: j['homePenalties'] as int?,
+        awayPenalties: j['awayPenalties'] as int?,
+        isExtraTime: j['isExtraTime'] as bool? ?? false,
       );
 }

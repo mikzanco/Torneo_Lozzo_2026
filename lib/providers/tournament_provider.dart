@@ -334,103 +334,32 @@ class TournamentProvider extends ChangeNotifier {
 
     if (qA.length < 4 || qB.length < 4 || qC.length < 4 || qD.length < 4) return;
 
+    // Seeding logic per gli Ottavi (OT1 - OT8)
+    // OT1: 1°A vs 4°D | OT2: 2°B vs 3°C | OT3: 1°C vs 4°B | OT4: 2°D vs 3°A
+    // OT5: 1°B vs 4°C | OT6: 2°A vs 3°D | OT7: 1°D vs 4°A | OT8: 2°C vs 3°B
     final newMatches = [
-      MatchModel(
-          id: "QF1",
-          group: "KO",
-          home: qA[0].id,
-          away: qD[3].id,
-          day: "Dom 5 Lug",
-          time: "14:00",
-          phase: "QF"),
-      MatchModel(
-          id: "QF2",
-          group: "KO",
-          home: qB[0].id,
-          away: qC[3].id,
-          day: "Dom 5 Lug",
-          time: "14:30",
-          phase: "QF"),
-      MatchModel(
-          id: "QF3",
-          group: "KO",
-          home: qC[0].id,
-          away: qB[3].id,
-          day: "Dom 5 Lug",
-          time: "15:00",
-          phase: "QF"),
-      MatchModel(
-          id: "QF4",
-          group: "KO",
-          home: qD[0].id,
-          away: qA[3].id,
-          day: "Dom 5 Lug",
-          time: "15:30",
-          phase: "QF"),
-      MatchModel(
-          id: "QF5",
-          group: "KO",
-          home: qA[1].id,
-          away: qD[2].id,
-          day: "Dom 5 Lug",
-          time: "16:00",
-          phase: "QF"),
-      MatchModel(
-          id: "QF6",
-          group: "KO",
-          home: qB[1].id,
-          away: qC[2].id,
-          day: "Dom 5 Lug",
-          time: "16:30",
-          phase: "QF"),
-      MatchModel(
-          id: "QF7",
-          group: "KO",
-          home: qC[1].id,
-          away: qB[2].id,
-          day: "Dom 5 Lug",
-          time: "17:00",
-          phase: "QF"),
-      MatchModel(
-          id: "QF8",
-          group: "KO",
-          home: qD[1].id,
-          away: qA[2].id,
-          day: "Dom 5 Lug",
-          time: "17:30",
-          phase: "QF"),
-      MatchModel(
-          id: "SF1",
-          group: "KO",
-          home: null,
-          away: null,
-          day: "Dom 5 Lug",
-          time: "19:00",
-          phase: "SF"),
-      MatchModel(
-          id: "SF2",
-          group: "KO",
-          home: null,
-          away: null,
-          day: "Dom 5 Lug",
-          time: "19:30",
-          phase: "SF"),
-      MatchModel(
-          id: "F3",
-          group: "KO",
-          home: null,
-          away: null,
-          day: "Dom 5 Lug",
-          time: "20:30",
-          phase: "F"),
-      MatchModel(
-          id: "F",
-          group: "KO",
-          home: null,
-          away: null,
-          day: "Dom 5 Lug",
-          time: "21:00",
-          phase: "F"),
+      MatchModel(id: "OT1", group: "KO", home: qA[0].id, away: qD[3].id, day: "Dom 5 Lug", time: "14:00", phase: "OT"),
+      MatchModel(id: "OT2", group: "KO", home: qB[1].id, away: qC[2].id, day: "Dom 5 Lug", time: "14:30", phase: "OT"),
+      MatchModel(id: "OT3", group: "KO", home: qC[0].id, away: qB[3].id, day: "Dom 5 Lug", time: "15:00", phase: "OT"),
+      MatchModel(id: "OT4", group: "KO", home: qD[1].id, away: qA[2].id, day: "Dom 5 Lug", time: "15:30", phase: "OT"),
+      MatchModel(id: "OT5", group: "KO", home: qB[0].id, away: qC[3].id, day: "Dom 5 Lug", time: "16:00", phase: "OT"),
+      MatchModel(id: "OT6", group: "KO", home: qA[1].id, away: qD[2].id, day: "Dom 5 Lug", time: "16:30", phase: "OT"),
+      MatchModel(id: "OT7", group: "KO", home: qD[0].id, away: qA[3].id, day: "Dom 5 Lug", time: "17:00", phase: "OT"),
+      MatchModel(id: "OT8", group: "KO", home: qC[1].id, away: qB[2].id, day: "Dom 5 Lug", time: "17:30", phase: "OT"),
+
+      // Quarti di Finale (QF1 - QF4)
+      MatchModel(id: "QF1", group: "KO", home: null, away: null, day: "Dom 5 Lug", time: "18:30", phase: "QF"),
+      MatchModel(id: "QF2", group: "KO", home: null, away: null, day: "Dom 5 Lug", time: "19:00", phase: "QF"),
+      MatchModel(id: "QF3", group: "KO", home: null, away: null, day: "Dom 5 Lug", time: "19:30", phase: "QF"),
+      MatchModel(id: "QF4", group: "KO", home: null, away: null, day: "Dom 5 Lug", time: "20:00", phase: "QF"),
+
+      // Semifinali (SF1 - SF2)
+      MatchModel(id: "SF1", group: "KO", home: null, away: null, day: "Dom 5 Lug", time: "21:00", phase: "SF"),
+      MatchModel(id: "SF2", group: "KO", home: null, away: null, day: "Dom 5 Lug", time: "21:30", phase: "SF"),
+
+      // Finali
+      MatchModel(id: "F3", group: "KO", home: null, away: null, day: "Dom 5 Lug", time: "22:30", phase: "F"),
+      MatchModel(id: "F", group: "KO", home: null, away: null, day: "Dom 5 Lug", time: "23:00", phase: "F"),
     ];
 
     final batch = FirebaseFirestore.instance.batch();
@@ -453,7 +382,28 @@ class TournamentProvider extends ChangeNotifier {
   }
 
   void _endBracketMatch(MatchModel completedMatch) async {
-    if (completedMatch.homeGoals == completedMatch.awayGoals) return;
+    int winner;
+    int loser;
+
+    if (completedMatch.homeGoals == completedMatch.awayGoals) {
+      if (completedMatch.id.startsWith("OT")) {
+        // Negli ottavi passa il migliore classificato (Home)
+        winner = completedMatch.home!;
+        loser = completedMatch.away!;
+      } else {
+        // Per le altre fasi, in caso di pareggio, dobbiamo usare i rigori
+        final homePen = completedMatch.homePenalties ?? 0;
+        final awayPen = completedMatch.awayPenalties ?? 0;
+        if (homePen == awayPen) {
+          return;
+        }
+        winner = homePen > awayPen ? completedMatch.home! : completedMatch.away!;
+        loser = homePen > awayPen ? completedMatch.away! : completedMatch.home!;
+      }
+    } else {
+      winner = completedMatch.homeGoals > completedMatch.awayGoals ? completedMatch.home! : completedMatch.away!;
+      loser = completedMatch.homeGoals > completedMatch.awayGoals ? completedMatch.away! : completedMatch.home!;
+    }
 
     final batch = FirebaseFirestore.instance.batch();
 
@@ -463,20 +413,44 @@ class TournamentProvider extends ChangeNotifier {
         .doc(completedMatch.id);
     batch.set(matchDoc, completedMatch.toJson());
 
-    final int winner =
-        completedMatch.homeGoals > completedMatch.awayGoals ? completedMatch.home! : completedMatch.away!;
-    final int loser =
-        completedMatch.homeGoals > completedMatch.awayGoals ? completedMatch.away! : completedMatch.home!;
-
     final Map<String, MatchModel> updates = {};
 
-    if (completedMatch.id == "QF1" || completedMatch.id == "QF2") {
-      final sf = matches.firstWhere((x) => x.id == "SF1");
-      final updatedSf = MatchModel(
+    // Ottavi -> Quarti
+    if (completedMatch.id.startsWith("OT")) {
+      final otNum = int.parse(completedMatch.id.replaceAll("OT", ""));
+      final qfNum = ((otNum - 1) ~/ 2) + 1;
+      final qfId = "QF$qfNum";
+      final qf = matches.firstWhere((x) => x.id == qfId);
+      final isHome = otNum % 2 == 1;
+
+      updates[qfId] = MatchModel(
+        id: qf.id,
+        group: qf.group,
+        home: isHome ? winner : qf.home,
+        away: !isHome ? winner : qf.away,
+        day: qf.day,
+        time: qf.time,
+        status: qf.status,
+        homeGoals: qf.homeGoals,
+        awayGoals: qf.awayGoals,
+        scorers: qf.scorers,
+        phase: qf.phase,
+      );
+    }
+
+    // Quarti -> Semis
+    if (completedMatch.id.startsWith("QF")) {
+      final qfNum = int.parse(completedMatch.id.replaceAll("QF", ""));
+      final sfNum = ((qfNum - 1) ~/ 2) + 1;
+      final sfId = "SF$sfNum";
+      final sf = matches.firstWhere((x) => x.id == sfId);
+      final isHome = qfNum % 2 == 1;
+
+      updates[sfId] = MatchModel(
         id: sf.id,
         group: sf.group,
-        home: completedMatch.id == "QF1" ? winner : sf.home,
-        away: completedMatch.id == "QF2" ? winner : sf.away,
+        home: isHome ? winner : sf.home,
+        away: !isHome ? winner : sf.away,
         day: sf.day,
         time: sf.time,
         status: sf.status,
@@ -485,77 +459,19 @@ class TournamentProvider extends ChangeNotifier {
         scorers: sf.scorers,
         phase: sf.phase,
       );
-      updates["SF1"] = updatedSf;
     }
 
-    if (completedMatch.id == "QF3" || completedMatch.id == "QF4") {
-      final sf = matches.firstWhere((x) => x.id == "SF2");
-      final updatedSf = MatchModel(
-        id: sf.id,
-        group: sf.group,
-        home: completedMatch.id == "QF3" ? winner : sf.home,
-        away: completedMatch.id == "QF4" ? winner : sf.away,
-        day: sf.day,
-        time: sf.time,
-        status: sf.status,
-        homeGoals: sf.homeGoals,
-        awayGoals: sf.awayGoals,
-        scorers: sf.scorers,
-        phase: sf.phase,
-      );
-      updates["SF2"] = updatedSf;
-    }
-
-    if (completedMatch.id == "QF5" || completedMatch.id == "QF6") {
-      final sf = updates["SF1"] ?? matches.firstWhere((x) => x.id == "SF1");
-      final homeVal = sf.home ?? winner;
-      final awayVal = sf.home == null ? sf.away : (sf.away ?? winner);
-
-      final updatedSf = MatchModel(
-        id: sf.id,
-        group: sf.group,
-        home: homeVal,
-        away: awayVal,
-        day: sf.day,
-        time: sf.time,
-        status: sf.status,
-        homeGoals: sf.homeGoals,
-        awayGoals: sf.awayGoals,
-        scorers: sf.scorers,
-        phase: sf.phase,
-      );
-      updates["SF1"] = updatedSf;
-    }
-
-    if (completedMatch.id == "QF7" || completedMatch.id == "QF8") {
-      final sf = updates["SF2"] ?? matches.firstWhere((x) => x.id == "SF2");
-      final homeVal = sf.home ?? winner;
-      final awayVal = sf.home == null ? sf.away : (sf.away ?? winner);
-
-      final updatedSf = MatchModel(
-        id: sf.id,
-        group: sf.group,
-        home: homeVal,
-        away: awayVal,
-        day: sf.day,
-        time: sf.time,
-        status: sf.status,
-        homeGoals: sf.homeGoals,
-        awayGoals: sf.awayGoals,
-        scorers: sf.scorers,
-        phase: sf.phase,
-      );
-      updates["SF2"] = updatedSf;
-    }
-
-    if (completedMatch.id == "SF1") {
+    // Semis -> Finals
+    if (completedMatch.id == "SF1" || completedMatch.id == "SF2") {
+      final isSf1 = completedMatch.id == "SF1";
       final f = matches.firstWhere((x) => x.id == "F");
       final f3 = matches.firstWhere((x) => x.id == "F3");
+
       updates["F"] = MatchModel(
         id: f.id,
         group: f.group,
-        home: winner,
-        away: f.away,
+        home: isSf1 ? winner : f.home,
+        away: !isSf1 ? winner : f.away,
         day: f.day,
         time: f.time,
         status: f.status,
@@ -564,11 +480,12 @@ class TournamentProvider extends ChangeNotifier {
         scorers: f.scorers,
         phase: f.phase,
       );
+
       updates["F3"] = MatchModel(
         id: f3.id,
         group: f3.group,
-        home: loser,
-        away: f3.away,
+        home: isSf1 ? loser : f3.home,
+        away: !isSf1 ? loser : f3.away,
         day: f3.day,
         time: f3.time,
         status: f3.status,
@@ -579,44 +496,72 @@ class TournamentProvider extends ChangeNotifier {
       );
     }
 
-    if (completedMatch.id == "SF2") {
-      final f = updates["F"] ?? matches.firstWhere((x) => x.id == "F");
-      final f3 = updates["F3"] ?? matches.firstWhere((x) => x.id == "F3");
-      updates["F"] = MatchModel(
-        id: f.id,
-        group: f.group,
-        home: f.home,
-        away: winner,
-        day: f.day,
-        time: f.time,
-        status: f.status,
-        homeGoals: f.homeGoals,
-        awayGoals: f.awayGoals,
-        scorers: f.scorers,
-        phase: f.phase,
-      );
-      updates["F3"] = MatchModel(
-        id: f3.id,
-        group: f3.group,
-        home: f3.home,
-        away: loser,
-        day: f3.day,
-        time: f3.time,
-        status: f3.status,
-        homeGoals: f3.homeGoals,
-        awayGoals: f3.awayGoals,
-        scorers: f3.scorers,
-        phase: f3.phase,
-      );
-    }
-
-    // Applica tutte le modifiche
     updates.forEach((id, matchModel) {
       final docRef = FirebaseFirestore.instance.collection('matches').doc(id);
       batch.set(docRef, matchModel.toJson());
     });
 
     await batch.commit();
+  }
+
+  void updatePenalties(String matchId, int homePen, int awayPen) {
+    final idx = matches.indexWhere((m) => m.id == matchId);
+    if (idx != -1) {
+      final match = matches[idx];
+      final updated = MatchModel(
+        id: match.id,
+        group: match.group,
+        home: match.home,
+        away: match.away,
+        day: match.day,
+        time: match.time,
+        status: match.status,
+        homeGoals: match.homeGoals,
+        awayGoals: match.awayGoals,
+        scorers: match.scorers,
+        phase: match.phase,
+        homeFouls: match.homeFouls,
+        awayFouls: match.awayFouls,
+        homePenalties: homePen,
+        awayPenalties: awayPen,
+        isExtraTime: match.isExtraTime,
+      );
+
+      FirebaseFirestore.instance
+          .collection('matches')
+          .doc(matchId)
+          .set(updated.toJson());
+    }
+  }
+
+  void toggleExtraTime(String matchId) {
+    final idx = matches.indexWhere((m) => m.id == matchId);
+    if (idx != -1) {
+      final match = matches[idx];
+      final updated = MatchModel(
+        id: match.id,
+        group: match.group,
+        home: match.home,
+        away: match.away,
+        day: match.day,
+        time: match.time,
+        status: match.status,
+        homeGoals: match.homeGoals,
+        awayGoals: match.awayGoals,
+        scorers: match.scorers,
+        phase: match.phase,
+        homeFouls: match.homeFouls,
+        awayFouls: match.awayFouls,
+        homePenalties: match.homePenalties,
+        awayPenalties: match.awayPenalties,
+        isExtraTime: !match.isExtraTime,
+      );
+
+      FirebaseFirestore.instance
+          .collection('matches')
+          .doc(matchId)
+          .set(updated.toJson());
+    }
   }
 
   // Team CRUD in Firestore

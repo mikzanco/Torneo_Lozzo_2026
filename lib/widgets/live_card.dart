@@ -181,6 +181,37 @@ class _LiveCardState extends State<LiveCard> {
                         ),
                       ],
                     ),
+                    if (widget.match.isExtraTime)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 2.0),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: AppColors.accent.withValues(alpha: 0.15),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: const Text(
+                            "D.T.S. (Golden Goal)",
+                            style: TextStyle(
+                              fontSize: 9,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.accent,
+                            ),
+                          ),
+                        ),
+                      ),
+                    if (widget.match.homePenalties != null || widget.match.awayPenalties != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 4.0),
+                        child: Text(
+                          "Rigori: ${widget.match.homePenalties ?? 0} – ${widget.match.awayPenalties ?? 0}",
+                          style: const TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w900,
+                            color: AppColors.accent,
+                          ),
+                        ),
+                      ),
                     const SizedBox(height: 6),
                     // Visualizzazione Falli
                     Row(
@@ -239,6 +270,38 @@ class _LiveCardState extends State<LiveCard> {
                         ),
                       ],
                     ),
+                    if (widget.match.group == 'KO') ...[
+                      if (widget.match.homeFouls >= 5)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 6.0),
+                          child: Text(
+                            widget.match.homeFouls == 5
+                                ? "⚠️ Bonus esaurito ${ht.name.split(' ')[0]}: Prossimo fallo Tiro Libero"
+                                : "🚨 TIRO LIBERO per ogni fallo commesso da ${ht.name.split(' ')[0]}!",
+                            style: const TextStyle(
+                              fontSize: 8,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.error,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      if (widget.match.awayFouls >= 5)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 6.0),
+                          child: Text(
+                            widget.match.awayFouls == 5
+                                ? "⚠️ Bonus esaurito ${at.name.split(' ')[0]}: Prossimo fallo Tiro Libero"
+                                : "🚨 TIRO LIBERO per ogni fallo commesso da ${at.name.split(' ')[0]}!",
+                            style: const TextStyle(
+                              fontSize: 8,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.error,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                    ],
                   ],
                 ),
                 
@@ -547,10 +610,181 @@ class _LiveCardState extends State<LiveCard> {
                     ],
                   ),
                   const SizedBox(height: 12),
-                  
+                  if (widget.match.group == 'KO') ...[
+                    const Divider(color: AppColors.border, height: 24),
+                    if (!widget.match.id.startsWith("OT")) ...[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            "TEMPI SUPPLEMENTARI (5' GOLDEN GOL)",
+                            style: TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.textSecondary,
+                            ),
+                          ),
+                          Switch(
+                            value: widget.match.isExtraTime,
+                            activeThumbColor: AppColors.accent,
+                            onChanged: (val) {
+                              provider.toggleExtraTime(widget.match.id);
+                            },
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            "RIGORI (TIE-BREAKER)",
+                            style: TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.accent,
+                            ),
+                          ),
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  final currentHome = widget.match.homePenalties ?? 0;
+                                  final currentAway = widget.match.awayPenalties ?? 0;
+                                  provider.updatePenalties(widget.match.id, (currentHome - 1).clamp(0, 99), currentAway);
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.all(6),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.surfaceBg,
+                                    shape: BoxShape.circle,
+                                    border: Border.all(color: AppColors.border),
+                                  ),
+                                  child: const Icon(Icons.remove, size: 14, color: AppColors.textPrimary),
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                "${widget.match.homePenalties ?? 0}",
+                                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                              ),
+                              const SizedBox(width: 8),
+                              GestureDetector(
+                                onTap: () {
+                                  final currentHome = widget.match.homePenalties ?? 0;
+                                  final currentAway = widget.match.awayPenalties ?? 0;
+                                  provider.updatePenalties(widget.match.id, currentHome + 1, currentAway);
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.all(6),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.surfaceBg,
+                                    shape: BoxShape.circle,
+                                    border: Border.all(color: AppColors.border),
+                                  ),
+                                  child: const Icon(Icons.add, size: 14, color: AppColors.textPrimary),
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              const Text("-", style: TextStyle(fontWeight: FontWeight.bold)),
+                              const SizedBox(width: 12),
+                              GestureDetector(
+                                onTap: () {
+                                  final currentHome = widget.match.homePenalties ?? 0;
+                                  final currentAway = widget.match.awayPenalties ?? 0;
+                                  provider.updatePenalties(widget.match.id, currentHome, (currentAway - 1).clamp(0, 99));
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.all(6),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.surfaceBg,
+                                    shape: BoxShape.circle,
+                                    border: Border.all(color: AppColors.border),
+                                  ),
+                                  child: const Icon(Icons.remove, size: 14, color: AppColors.textPrimary),
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                "${widget.match.awayPenalties ?? 0}",
+                                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                              ),
+                              const SizedBox(width: 8),
+                              GestureDetector(
+                                onTap: () {
+                                  final currentHome = widget.match.homePenalties ?? 0;
+                                  final currentAway = widget.match.awayPenalties ?? 0;
+                                  provider.updatePenalties(widget.match.id, currentHome, currentAway + 1);
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.all(6),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.surfaceBg,
+                                    shape: BoxShape.circle,
+                                    border: Border.all(color: AppColors.border),
+                                  ),
+                                  child: const Icon(Icons.add, size: 14, color: AppColors.textPrimary),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                    ],
+                  ],
+                  // Warnings and validations for ending match
+                  () {
+                    if (widget.match.group == 'KO') {
+                      if (widget.match.homeGoals == widget.match.awayGoals) {
+                        if (widget.match.id.startsWith("OT")) {
+                          return const Padding(
+                            padding: EdgeInsets.only(bottom: 8.0),
+                            child: Text(
+                              "⚠️ Pareggio: passa la squadra in casa per miglior piazzamento.",
+                              style: TextStyle(fontSize: 10, color: AppColors.error, fontWeight: FontWeight.bold),
+                              textAlign: TextAlign.center,
+                            ),
+                          );
+                        } else {
+                          final homePen = widget.match.homePenalties ?? 0;
+                          final awayPen = widget.match.awayPenalties ?? 0;
+                          if (homePen == awayPen) {
+                            return const Padding(
+                              padding: EdgeInsets.only(bottom: 8.0),
+                              child: Text(
+                                "❌ Impossibile terminare in pareggio dai Quarti in poi: inserire i rigori.",
+                                style: TextStyle(fontSize: 10, color: AppColors.error, fontWeight: FontWeight.bold),
+                                textAlign: TextAlign.center,
+                              ),
+                            );
+                          }
+                        }
+                      }
+                    }
+                    return const SizedBox.shrink();
+                  }(),
                   // End Match button
                   GestureDetector(
-                    onTap: () => provider.endMatch(widget.match.id),
+                    onTap: () {
+                      if (widget.match.group == 'KO' && 
+                          !widget.match.id.startsWith("OT") && 
+                          widget.match.homeGoals == widget.match.awayGoals) {
+                        final homePen = widget.match.homePenalties ?? 0;
+                        final awayPen = widget.match.awayPenalties ?? 0;
+                        if (homePen == awayPen) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text("Inserire i rigori per decidere il vincitore!"),
+                              backgroundColor: AppColors.error,
+                            ),
+                          );
+                          return;
+                        }
+                      }
+                      provider.endMatch(widget.match.id);
+                    },
                     child: Container(
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       decoration: BoxDecoration(

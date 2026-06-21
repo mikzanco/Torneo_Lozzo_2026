@@ -41,11 +41,19 @@ class _BracketScreenState extends State<BracketScreen> {
     final groupMatches = provider.matches.where((m) => m.group != "KO");
     final groupDone = groupMatches.isNotEmpty && groupMatches.every((m) => m.status == MatchStatus.done);
 
-    final bracketMatchIds = ["QF1", "QF2", "QF3", "QF4", "QF5", "QF6", "QF7", "QF8", "SF1", "SF2", "F3", "F"];
+    final bracketMatchIds = [
+      for (int i = 1; i <= 8; i++) "OT$i",
+      for (int i = 1; i <= 4; i++) "QF$i",
+      "SF1",
+      "SF2",
+      "F3",
+      "F"
+    ];
     final bracketMatches = provider.matches.where((m) => bracketMatchIds.contains(m.id)).toList();
 
     final phases = [
-      {"label": "Quarti di Finale", "ids": ["QF1", "QF2", "QF3", "QF4", "QF5", "QF6", "QF7", "QF8"]},
+      {"label": "Ottavi di Finale", "ids": [for (int i = 1; i <= 8; i++) "OT$i"]},
+      {"label": "Quarti di Finale", "ids": [for (int i = 1; i <= 4; i++) "QF$i"]},
       {"label": "Semifinali", "ids": ["SF1", "SF2"]},
       {"label": "Finale 3°/4° posto", "ids": ["F3"]},
       {"label": "🏆 Finale", "ids": ["F"]},
@@ -204,7 +212,20 @@ class _BracketScreenState extends State<BracketScreen> {
                       final isDone = m.status == MatchStatus.done;
                       final isLive = m.status == MatchStatus.live;
 
-                      final int? winner = isDone ? (m.homeGoals > m.awayGoals ? m.home : m.away) : null;
+                      int? winner;
+                      if (isDone) {
+                        if (m.homeGoals == m.awayGoals) {
+                          if (m.id.startsWith("OT")) {
+                            winner = m.home;
+                          } else {
+                            final homePen = m.homePenalties ?? 0;
+                            final awayPen = m.awayPenalties ?? 0;
+                            winner = homePen > awayPen ? m.home : m.away;
+                          }
+                        } else {
+                          winner = m.homeGoals > m.awayGoals ? m.home : m.away;
+                        }
+                      }
 
                       final isHomeWinner = winner != null && winner == m.home;
                       final isAwayWinner = winner != null && winner == m.away;
@@ -222,6 +243,31 @@ class _BracketScreenState extends State<BracketScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
+                            // Match header (ID & Extra Time indicator)
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  m.id,
+                                  style: const TextStyle(
+                                    fontSize: 8,
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.textTertiary,
+                                  ),
+                                ),
+                                if (m.isExtraTime)
+                                  const Text(
+                                    "D.T.S. (Golden Goal)",
+                                    style: TextStyle(
+                                      fontSize: 8,
+                                      fontWeight: FontWeight.bold,
+                                      color: AppColors.accent,
+                                    ),
+                                  ),
+                              ],
+                            ),
+                            const SizedBox(height: 6),
+
                             // Squadra Casa Row
                             Opacity(
                               opacity: isDone && !isHomeWinner ? 0.6 : 1.0,
@@ -240,13 +286,29 @@ class _BracketScreenState extends State<BracketScreen> {
                                     ),
                                   ),
                                   if (isDone || isLive) ...[
-                                    Text(
-                                      "${m.homeGoals}",
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w900,
-                                        color: isHomeWinner ? AppColors.accent : AppColors.textSecondary,
-                                      ),
+                                    Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text(
+                                          "${m.homeGoals}",
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w900,
+                                            color: isHomeWinner ? AppColors.accent : AppColors.textSecondary,
+                                          ),
+                                        ),
+                                        if (m.homePenalties != null || m.awayPenalties != null) ...[
+                                          const SizedBox(width: 4),
+                                          Text(
+                                            "(${m.homePenalties ?? 0})",
+                                            style: TextStyle(
+                                              fontSize: 11,
+                                              fontWeight: FontWeight.bold,
+                                              color: isHomeWinner ? AppColors.accent : AppColors.textTertiary,
+                                            ),
+                                          ),
+                                        ],
+                                      ],
                                     ),
                                   ],
                                   if (isHomeWinner) ...[
@@ -276,13 +338,29 @@ class _BracketScreenState extends State<BracketScreen> {
                                     ),
                                   ),
                                   if (isDone || isLive) ...[
-                                    Text(
-                                      "${m.awayGoals}",
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w900,
-                                        color: isAwayWinner ? AppColors.accent : AppColors.textSecondary,
-                                      ),
+                                    Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text(
+                                          "${m.awayGoals}",
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w900,
+                                            color: isAwayWinner ? AppColors.accent : AppColors.textSecondary,
+                                          ),
+                                        ),
+                                        if (m.homePenalties != null || m.awayPenalties != null) ...[
+                                          const SizedBox(width: 4),
+                                          Text(
+                                            "(${m.awayPenalties ?? 0})",
+                                            style: TextStyle(
+                                              fontSize: 11,
+                                              fontWeight: FontWeight.bold,
+                                              color: isAwayWinner ? AppColors.accent : AppColors.textTertiary,
+                                            ),
+                                          ),
+                                        ],
+                                      ],
                                     ),
                                   ],
                                   if (isAwayWinner) ...[
@@ -334,21 +412,36 @@ class _BracketScreenState extends State<BracketScreen> {
                                           ),
                                           const SizedBox(width: 8),
                                           GestureDetector(
-                                            onTap: m.homeGoals != m.awayGoals
-                                                ? () => provider.endMatch(m.id)
-                                                : null,
-                                            child: AnimatedOpacity(
-                                              duration: const Duration(milliseconds: 150),
-                                              opacity: m.homeGoals != m.awayGoals ? 1.0 : 0.4,
-                                              child: Container(
-                                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                                                decoration: BoxDecoration(
-                                                  color: AppColors.error.withValues(alpha: 0.15),
-                                                  border: Border.all(color: AppColors.error.withValues(alpha: 0.3)),
-                                                  borderRadius: BorderRadius.circular(8),
-                                                ),
-                                                child: const Text("🏁 Fine", style: TextStyle(fontSize: 11, fontWeight: FontWeight.w900, color: AppColors.error)),
+                                            onTap: () {
+                                              if (m.homeGoals == m.awayGoals) {
+                                                if (m.id.startsWith("OT")) {
+                                                  provider.endMatch(m.id);
+                                                } else {
+                                                  final homePen = m.homePenalties ?? 0;
+                                                  final awayPen = m.awayPenalties ?? 0;
+                                                  if (homePen == awayPen) {
+                                                    ScaffoldMessenger.of(context).showSnackBar(
+                                                      const SnackBar(
+                                                        content: Text("Inserire i rigori per decidere il vincitore!"),
+                                                        backgroundColor: AppColors.error,
+                                                      ),
+                                                    );
+                                                    return;
+                                                  }
+                                                  provider.endMatch(m.id);
+                                                }
+                                              } else {
+                                                provider.endMatch(m.id);
+                                              }
+                                            },
+                                            child: Container(
+                                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                              decoration: BoxDecoration(
+                                                color: AppColors.error.withValues(alpha: 0.15),
+                                                border: Border.all(color: AppColors.error.withValues(alpha: 0.3)),
+                                                borderRadius: BorderRadius.circular(8),
                                               ),
+                                              child: const Text("🏁 Fine", style: TextStyle(fontSize: 11, fontWeight: FontWeight.w900, color: AppColors.error)),
                                             ),
                                           ),
                                         ],
