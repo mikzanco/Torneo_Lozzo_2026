@@ -1,0 +1,22 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Torneo Lozzo 2026",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "Torneo Lozzo 2026 (Profile Mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "Torneo Lozzo 2026 (Release Mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        }
+    ]
+}

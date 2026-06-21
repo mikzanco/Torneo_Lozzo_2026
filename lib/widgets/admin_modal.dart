@@ -8,9 +8,9 @@ class AdminModal extends StatefulWidget {
   final VoidCallback onSuccess;
 
   const AdminModal({
-    Key? key,
+    super.key,
     required this.onSuccess,
-  }) : super(key: key);
+  });
 
   @override
   State<AdminModal> createState() => _AdminModalState();
@@ -92,7 +92,7 @@ class _AdminModalState extends State<AdminModal> with SingleTickerProviderStateM
           height: 48,
           margin: const EdgeInsets.symmetric(horizontal: 6),
           decoration: BoxDecoration(
-            color: filled ? AppColors.accent.withOpacity(0.1) : Colors.transparent,
+            color: filled ? AppColors.accent.withValues(alpha: 0.1) : Colors.transparent,
             border: Border.all(
               color: _hasError
                   ? AppColors.error

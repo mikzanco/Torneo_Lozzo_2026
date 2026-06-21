@@ -8,7 +8,7 @@ import '../widgets/team_badge.dart';
 import '../widgets/team_edit_modal.dart';
 
 class TeamsScreen extends StatefulWidget {
-  const TeamsScreen({Key? key}) : super(key: key);
+  const TeamsScreen({super.key});
 
   @override
   State<TeamsScreen> createState() => _TeamsScreenState();
@@ -102,15 +102,15 @@ class _TeamsScreenState extends State<TeamsScreen> {
               border: Border.all(color: AppColors.border),
               borderRadius: BorderRadius.circular(20),
             ),
-            child: Column(
+            child: const Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Text(
+                Text(
                   "🔒",
                   style: TextStyle(fontSize: 48),
                 ),
-                const SizedBox(height: 16),
-                const Text(
+                SizedBox(height: 16),
+                Text(
                   "Area Riservata Admin",
                   style: TextStyle(
                     fontSize: 15,
@@ -118,8 +118,8 @@ class _TeamsScreenState extends State<TeamsScreen> {
                     color: AppColors.textPrimary,
                   ),
                 ),
-                const SizedBox(height: 6),
-                const Text(
+                SizedBox(height: 6),
+                Text(
                   "Accedi come admin per gestire le squadre del torneo. Tocca l'icona del lucchetto in alto a destra ed inserisci il PIN.",
                   textAlign: TextAlign.center,
                   style: TextStyle(
@@ -377,7 +377,7 @@ class _TeamsScreenState extends State<TeamsScreen> {
                           style: TextStyle(
                             fontSize: 9,
                             fontWeight: FontWeight.w900,
-                            color: countColor.withOpacity(0.8),
+                            color: countColor.withValues(alpha: 0.8),
                           ),
                         ),
                       ],
@@ -550,8 +550,8 @@ class _TeamsScreenState extends State<TeamsScreen> {
             child: Container(
               padding: const EdgeInsets.symmetric(vertical: 16),
               decoration: BoxDecoration(
-                color: AppColors.accent.withOpacity(0.08),
-                border: Border.all(color: AppColors.accent.withOpacity(0.3)),
+                color: AppColors.accent.withValues(alpha: 0.08),
+                border: Border.all(color: AppColors.accent.withValues(alpha: 0.3)),
                 borderRadius: BorderRadius.circular(16),
               ),
               child: const Row(
@@ -647,8 +647,8 @@ class _TeamsScreenState extends State<TeamsScreen> {
             child: Container(
               padding: const EdgeInsets.symmetric(vertical: 16),
               decoration: BoxDecoration(
-                color: AppColors.error.withOpacity(0.08),
-                border: Border.all(color: AppColors.error.withOpacity(0.3)),
+                color: AppColors.error.withValues(alpha: 0.08),
+                border: Border.all(color: AppColors.error.withValues(alpha: 0.3)),
                 borderRadius: BorderRadius.circular(16),
               ),
               child: const Row(

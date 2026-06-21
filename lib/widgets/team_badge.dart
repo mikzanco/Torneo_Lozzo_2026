@@ -9,10 +9,10 @@ class TeamBadge extends StatelessWidget {
   final BadgeSize size;
 
   const TeamBadge({
-    Key? key,
+    super.key,
     required this.team,
     this.size = BadgeSize.md,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +75,7 @@ class TeamBadge extends StatelessWidget {
         borderRadius: BorderRadius.circular(radius),
         boxShadow: [
           BoxShadow(
-            color: colors[1].withOpacity(0.3),
+            color: colors[1].withValues(alpha: 0.3),
             blurRadius: 8,
             offset: const Offset(0, 4),
           ),

@@ -14,21 +14,20 @@ class TeamEditModal extends StatefulWidget {
   final Function(int)? onDelete; // null per le nuove squadre
 
   const TeamEditModal({
-    Key? key,
+    super.key,
     required this.team,
     required this.teams,
     required this.matches,
     required this.onClose,
     required this.onSave,
     this.onDelete,
-  }) : super(key: key);
+  });
 
   @override
   State<TeamEditModal> createState() => _TeamEditModalState();
 }
 
 class _TeamEditModalState extends State<TeamEditModal> {
-  final _formKey = GlobalKey<FormState>();
   late String _name;
   late String _group;
   late int _color;
@@ -209,7 +208,7 @@ class _TeamEditModalState extends State<TeamEditModal> {
                     Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: AppColors.surfaceBg.withOpacity(0.3),
+                        color: AppColors.surfaceBg.withValues(alpha: 0.3),
                         borderRadius: BorderRadius.circular(16),
                         border: Border.all(color: AppColors.border),
                       ),
@@ -462,7 +461,7 @@ class _TeamEditModalState extends State<TeamEditModal> {
                                       width: 28,
                                       height: 28,
                                       decoration: BoxDecoration(
-                                        color: AppColors.error.withOpacity(0.1),
+                                        color: AppColors.error.withValues(alpha: 0.1),
                                         borderRadius: BorderRadius.circular(8),
                                       ),
                                       child: const Center(
@@ -580,8 +579,8 @@ class _TeamEditModalState extends State<TeamEditModal> {
                         Container(
                           padding: const EdgeInsets.all(16),
                           decoration: BoxDecoration(
-                            color: AppColors.error.withOpacity(0.08),
-                            border: Border.all(color: AppColors.error.withOpacity(0.3)),
+                            color: AppColors.error.withValues(alpha: 0.08),
+                            border: Border.all(color: AppColors.error.withValues(alpha: 0.3)),
                             borderRadius: BorderRadius.circular(16),
                           ),
                           child: Column(

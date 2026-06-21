@@ -5,7 +5,7 @@ import '../theme/app_theme.dart';
 import '../utils/scorers_calculator.dart';
 
 class ScorersScreen extends StatelessWidget {
-  const ScorersScreen({Key? key}) : super(key: key);
+  const ScorersScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -99,7 +99,7 @@ class ScorersScreen extends StatelessWidget {
                                     shape: BoxShape.circle,
                                     boxShadow: [
                                       BoxShadow(
-                                        color: gradients[1].withOpacity(0.3),
+                                        color: gradients[1].withValues(alpha: 0.3),
                                         blurRadius: 4,
                                         offset: const Offset(0, 2),
                                       ),

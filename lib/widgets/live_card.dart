@@ -13,9 +13,9 @@ class LiveCard extends StatefulWidget {
   final MatchModel match;
 
   const LiveCard({
-    Key? key,
+    super.key,
     required this.match,
-  }) : super(key: key);
+  });
 
   @override
   State<LiveCard> createState() => _LiveCardState();
@@ -326,7 +326,7 @@ class _LiveCardState extends State<LiveCard> {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: AppColors.accent.withOpacity(0.04),
+                color: AppColors.accent.withValues(alpha: 0.04),
                 border: const Border(top: BorderSide(color: AppColors.border)),
               ),
               child: Column(
@@ -401,8 +401,8 @@ class _LiveCardState extends State<LiveCard> {
                     child: Container(
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       decoration: BoxDecoration(
-                        color: AppColors.error.withOpacity(0.15),
-                        border: Border.all(color: AppColors.error.withOpacity(0.3)),
+                        color: AppColors.error.withValues(alpha: 0.15),
+                        border: Border.all(color: AppColors.error.withValues(alpha: 0.3)),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: const Center(

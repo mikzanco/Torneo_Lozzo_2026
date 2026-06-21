@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 import 'providers/tournament_provider.dart';
 import 'theme/app_theme.dart';
 import 'models/match_model.dart';
@@ -13,8 +15,11 @@ import 'screens/results_screen.dart';
 import 'screens/bracket_screen.dart';
 import 'screens/teams_screen.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 
@@ -36,7 +41,6 @@ class MyApp extends StatelessWidget {
           colorScheme: const ColorScheme.dark(
             primary: AppColors.accent,
             surface: AppColors.cardBg,
-            background: AppColors.scaffoldBg,
           ),
         ),
         home: const TournamentShell(),
@@ -46,7 +50,7 @@ class MyApp extends StatelessWidget {
 }
 
 class TournamentShell extends StatefulWidget {
-  const TournamentShell({Key? key}) : super(key: key);
+  const TournamentShell({super.key});
 
   @override
   State<TournamentShell> createState() => _TournamentShellState();
@@ -315,7 +319,7 @@ class _TournamentShellState extends State<TournamentShell> {
                     opacity: provider.goalFlash ? 1.0 : 0.0,
                     duration: const Duration(milliseconds: 700),
                     child: Container(
-                      color: AppColors.accent.withOpacity(0.1),
+                      color: AppColors.accent.withValues(alpha: 0.1),
                     ),
                   ),
                 ),

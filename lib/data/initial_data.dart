@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import '../models/team.dart';
 import '../models/player.dart';
 import '../models/match_model.dart';

@@ -11,11 +11,11 @@ class FullTable extends StatelessWidget {
   final List<MatchModel> matches;
 
   const FullTable({
-    Key? key,
+    super.key,
     required this.group,
     required this.teams,
     required this.matches,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -99,7 +99,7 @@ class FullTable extends StatelessWidget {
             bottom: BorderSide(
               color: index == rows.length - 1
                   ? Colors.transparent
-                  : AppColors.border.withOpacity(0.5),
+                  : AppColors.border.withValues(alpha: 0.5),
             ),
             left: leftBorderColor != null
                 ? BorderSide(color: leftBorderColor, width: 2)
@@ -185,7 +185,7 @@ class FullTable extends StatelessWidget {
             SizedBox(
               width: 28,
               child: Text(
-                (t.goalDiff > 0 ? "+" : "") + "${t.goalDiff}",
+                "${t.goalDiff > 0 ? "+" : ""}${t.goalDiff}",
                 textAlign: TextAlign.center,
                 style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
               ),

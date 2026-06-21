@@ -8,7 +8,7 @@ import '../widgets/live_card.dart';
 import '../widgets/team_badge.dart';
 
 class LiveScreen extends StatefulWidget {
-  const LiveScreen({Key? key}) : super(key: key);
+  const LiveScreen({super.key});
 
   @override
   State<LiveScreen> createState() => _LiveScreenState();
@@ -56,14 +56,14 @@ class _LiveScreenState extends State<LiveScreen> {
                 border: Border.all(color: AppColors.border),
                 borderRadius: BorderRadius.circular(20),
               ),
-              child: Column(
+              child: const Column(
                 children: [
-                  const Text(
+                  Text(
                     "🏁",
                     style: TextStyle(fontSize: 48),
                   ),
-                  const SizedBox(height: 12),
-                  const Text(
+                  SizedBox(height: 12),
+                  Text(
                     "Nessuna partita in corso",
                     style: TextStyle(
                       fontSize: 15,
@@ -71,8 +71,8 @@ class _LiveScreenState extends State<LiveScreen> {
                       color: AppColors.textPrimary,
                     ),
                   ),
-                  const SizedBox(height: 4),
-                  const Text(
+                  SizedBox(height: 4),
+                  Text(
                     "Le prossime partite in programma qui sotto",
                     textAlign: TextAlign.center,
                     style: TextStyle(
@@ -200,8 +200,8 @@ class _LiveScreenState extends State<LiveScreen> {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: AppColors.accent.withOpacity(0.05),
-                border: Border.all(color: AppColors.accent.withOpacity(0.2)),
+                color: AppColors.accent.withValues(alpha: 0.05),
+                border: Border.all(color: AppColors.accent.withValues(alpha: 0.2)),
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Column(

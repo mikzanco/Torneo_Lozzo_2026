@@ -5,9 +5,9 @@ class FormDot extends StatelessWidget {
   final String result; // "w", "d", "l"
 
   const FormDot({
-    Key? key,
+    super.key,
     required this.result,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

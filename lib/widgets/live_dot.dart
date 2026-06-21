@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 
 class LiveDot extends StatefulWidget {
-  const LiveDot({Key? key}) : super(key: key);
+  const LiveDot({super.key});
 
   @override
   State<LiveDot> createState() => _LiveDotState();

@@ -6,9 +6,9 @@ class WelcomeCover extends StatefulWidget {
   final VoidCallback onEnter;
 
   const WelcomeCover({
-    Key? key,
+    super.key,
     required this.onEnter,
-  }) : super(key: key);
+  });
 
   @override
   State<WelcomeCover> createState() => _WelcomeCoverState();
@@ -93,10 +93,10 @@ class _WelcomeCoverState extends State<WelcomeCover> with SingleTickerProviderSt
               height: 250,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: AppColors.accentSecondary.withOpacity(0.04),
+                color: AppColors.accentSecondary.withValues(alpha: 0.04),
                 boxShadow: [
                   BoxShadow(
-                    color: AppColors.accentSecondary.withOpacity(0.12),
+                    color: AppColors.accentSecondary.withValues(alpha: 0.12),
                     blurRadius: 100,
                     spreadRadius: 40,
                   ),
@@ -114,10 +114,10 @@ class _WelcomeCoverState extends State<WelcomeCover> with SingleTickerProviderSt
               height: 300,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: AppColors.accent.withOpacity(0.04),
+                color: AppColors.accent.withValues(alpha: 0.04),
                 boxShadow: [
                   BoxShadow(
-                    color: AppColors.accent.withOpacity(0.12),
+                    color: AppColors.accent.withValues(alpha: 0.12),
                     blurRadius: 120,
                     spreadRadius: 50,
                   ),
@@ -136,7 +136,7 @@ class _WelcomeCoverState extends State<WelcomeCover> with SingleTickerProviderSt
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: AppColors.accentSecondary.withOpacity(0.15),
+                  color: AppColors.accentSecondary.withValues(alpha: 0.15),
                   width: 1.5,
                 ),
               ),
@@ -152,7 +152,7 @@ class _WelcomeCoverState extends State<WelcomeCover> with SingleTickerProviderSt
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: AppColors.accent.withOpacity(0.12),
+                  color: AppColors.accent.withValues(alpha: 0.12),
                   width: 2.0,
                 ),
               ),
@@ -166,7 +166,7 @@ class _WelcomeCoverState extends State<WelcomeCover> with SingleTickerProviderSt
             child: Text(
               "✕",
               style: TextStyle(
-                color: AppColors.accentSecondary.withOpacity(0.3),
+                color: AppColors.accentSecondary.withValues(alpha: 0.3),
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
@@ -179,7 +179,7 @@ class _WelcomeCoverState extends State<WelcomeCover> with SingleTickerProviderSt
             child: Text(
               "✕",
               style: TextStyle(
-                color: AppColors.accent.withOpacity(0.3),
+                color: AppColors.accent.withValues(alpha: 0.3),
                 fontSize: 14,
                 fontWeight: FontWeight.bold,
               ),
@@ -210,7 +210,7 @@ class _WelcomeCoverState extends State<WelcomeCover> with SingleTickerProviderSt
                           letterSpacing: -1.0,
                           shadows: [
                             Shadow(
-                              color: AppColors.accentSecondary.withOpacity(0.3),
+                              color: AppColors.accentSecondary.withValues(alpha: 0.3),
                               blurRadius: 15,
                               offset: const Offset(-2, 2),
                             ),
@@ -231,7 +231,7 @@ class _WelcomeCoverState extends State<WelcomeCover> with SingleTickerProviderSt
                           height: 0.9,
                           shadows: [
                             Shadow(
-                              color: AppColors.accent.withOpacity(0.3),
+                              color: AppColors.accent.withValues(alpha: 0.3),
                               blurRadius: 15,
                               offset: const Offset(2, 2),
                             ),
@@ -299,7 +299,7 @@ class _WelcomeCoverState extends State<WelcomeCover> with SingleTickerProviderSt
                           letterSpacing: -0.5,
                           shadows: [
                             Shadow(
-                              color: Colors.black.withOpacity(0.5),
+                              color: Colors.black.withValues(alpha: 0.5),
                               blurRadius: 5,
                               offset: const Offset(0, 2),
                             ),
@@ -319,7 +319,7 @@ class _WelcomeCoverState extends State<WelcomeCover> with SingleTickerProviderSt
                           height: 0.9,
                           shadows: [
                             Shadow(
-                              color: Colors.black.withOpacity(0.5),
+                              color: Colors.black.withValues(alpha: 0.5),
                               blurRadius: 5,
                               offset: const Offset(0, 2),
                             ),
@@ -341,7 +341,7 @@ class _WelcomeCoverState extends State<WelcomeCover> with SingleTickerProviderSt
                             letterSpacing: -0.5,
                             shadows: [
                               Shadow(
-                                color: AppColors.accent.withOpacity(0.4),
+                                color: AppColors.accent.withValues(alpha: 0.4),
                                 blurRadius: 10,
                                 offset: const Offset(0, 2),
                               ),
@@ -370,7 +370,7 @@ class _WelcomeCoverState extends State<WelcomeCover> with SingleTickerProviderSt
                             border: Border.all(color: AppColors.accent, width: 2),
                             boxShadow: [
                               BoxShadow(
-                                color: AppColors.accent.withOpacity(0.2),
+                                color: AppColors.accent.withValues(alpha: 0.2),
                                 blurRadius: 15,
                                 spreadRadius: 1,
                                 offset: const Offset(0, 3),
@@ -378,8 +378,8 @@ class _WelcomeCoverState extends State<WelcomeCover> with SingleTickerProviderSt
                             ],
                             gradient: LinearGradient(
                               colors: [
-                                AppColors.accent.withOpacity(0.08),
-                                AppColors.accentSecondary.withOpacity(0.08),
+                                AppColors.accent.withValues(alpha: 0.08),
+                                AppColors.accentSecondary.withValues(alpha: 0.08),
                               ],
                             ),
                           ),
@@ -396,7 +396,7 @@ class _WelcomeCoverState extends State<WelcomeCover> with SingleTickerProviderSt
                                   letterSpacing: 2.0,
                                   shadows: [
                                     Shadow(
-                                      color: AppColors.accent.withOpacity(0.5),
+                                      color: AppColors.accent.withValues(alpha: 0.5),
                                       blurRadius: 5,
                                     ),
                                   ],
@@ -448,10 +448,10 @@ class _WelcomeCoverState extends State<WelcomeCover> with SingleTickerProviderSt
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           decoration: BoxDecoration(
-            color: AppColors.white.withOpacity(0.04),
+            color: AppColors.white.withValues(alpha: 0.04),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: AppColors.white.withOpacity(0.08),
+              color: AppColors.white.withValues(alpha: 0.08),
               width: 1,
             ),
           ),
@@ -481,9 +481,9 @@ class InstagramIcon extends StatelessWidget {
   final double size;
 
   const InstagramIcon({
-    Key? key,
+    super.key,
     this.size = 20,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

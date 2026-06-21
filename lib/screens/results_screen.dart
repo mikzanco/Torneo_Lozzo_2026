@@ -7,7 +7,7 @@ import '../theme/app_theme.dart';
 import '../widgets/team_badge.dart';
 
 class ResultsScreen extends StatefulWidget {
-  const ResultsScreen({Key? key}) : super(key: key);
+  const ResultsScreen({super.key});
 
   @override
   State<ResultsScreen> createState() => _ResultsScreenState();
@@ -303,7 +303,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
                   const SizedBox(height: 12),
                 ],
               );
-            }).toList(),
+            }),
           ],
         ],
       ),

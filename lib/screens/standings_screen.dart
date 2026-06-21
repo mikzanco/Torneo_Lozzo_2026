@@ -6,7 +6,7 @@ import '../widgets/mini_table.dart';
 import '../widgets/full_table.dart';
 
 class StandingsScreen extends StatefulWidget {
-  const StandingsScreen({Key? key}) : super(key: key);
+  const StandingsScreen({super.key});
 
   @override
   State<StandingsScreen> createState() => _StandingsScreenState();
@@ -97,7 +97,7 @@ class _StandingsScreenState extends State<StandingsScreen> {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: AppColors.surfaceBg.withOpacity(0.2),
+              color: AppColors.surfaceBg.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(color: AppColors.borderLight),
             ),

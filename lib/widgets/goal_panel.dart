@@ -13,11 +13,11 @@ class GoalPanel extends StatefulWidget {
   final int timer;
 
   const GoalPanel({
-    Key? key,
+    super.key,
     required this.match,
     required this.side,
     required this.timer,
-  }) : super(key: key);
+  });
 
   @override
   State<GoalPanel> createState() => _GoalPanelState();

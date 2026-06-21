@@ -9,7 +9,7 @@ import '../widgets/live_dot.dart';
 import '../widgets/goal_panel.dart';
 
 class BracketScreen extends StatefulWidget {
-  const BracketScreen({Key? key}) : super(key: key);
+  const BracketScreen({super.key});
 
   @override
   State<BracketScreen> createState() => _BracketScreenState();
@@ -17,8 +17,6 @@ class BracketScreen extends StatefulWidget {
 
 class _BracketScreenState extends State<BracketScreen> {
   // Configurazione dei bottoni per inserimento rapido gol nel tabellone KO
-  String? _activeScorerMatchId;
-  String? _activeScorerSide;
 
   void _openGoalModal(MatchModel match, String side) {
     showModalBottomSheet(
@@ -67,14 +65,14 @@ class _BracketScreenState extends State<BracketScreen> {
                 border: Border.all(color: AppColors.border),
                 borderRadius: BorderRadius.circular(20),
               ),
-              child: Column(
+              child: const Column(
                 children: [
-                  const Text(
+                  Text(
                     "⏳",
                     style: TextStyle(fontSize: 48),
                   ),
-                  const SizedBox(height: 12),
-                  const Text(
+                  SizedBox(height: 12),
+                  Text(
                     "Il tabellone si genera al termine della fase a gironi",
                     textAlign: TextAlign.center,
                     style: TextStyle(
@@ -83,8 +81,8 @@ class _BracketScreenState extends State<BracketScreen> {
                       color: AppColors.textPrimary,
                     ),
                   ),
-                  const SizedBox(height: 4),
-                  const Text(
+                  SizedBox(height: 4),
+                  Text(
                     "Tutte le partite dei gironi devono essere completate",
                     textAlign: TextAlign.center,
                     style: TextStyle(
@@ -110,7 +108,7 @@ class _BracketScreenState extends State<BracketScreen> {
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
-                        color: AppColors.accent.withOpacity(0.2),
+                        color: AppColors.accent.withValues(alpha: 0.2),
                         blurRadius: 10,
                         offset: const Offset(0, 4),
                       ),
@@ -216,7 +214,7 @@ class _BracketScreenState extends State<BracketScreen> {
                         decoration: BoxDecoration(
                           color: AppColors.cardBg,
                           border: Border.all(
-                            color: isLive ? AppColors.live.withOpacity(0.5) : AppColors.border,
+                            color: isLive ? AppColors.live.withValues(alpha: 0.5) : AppColors.border,
                             width: isLive ? 2.0 : 1.0,
                           ),
                           borderRadius: BorderRadius.circular(16),
@@ -345,8 +343,8 @@ class _BracketScreenState extends State<BracketScreen> {
                                               child: Container(
                                                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                                                 decoration: BoxDecoration(
-                                                  color: AppColors.error.withOpacity(0.15),
-                                                  border: Border.all(color: AppColors.error.withOpacity(0.3)),
+                                                  color: AppColors.error.withValues(alpha: 0.15),
+                                                  border: Border.all(color: AppColors.error.withValues(alpha: 0.3)),
                                                   borderRadius: BorderRadius.circular(8),
                                                 ),
                                                 child: const Text("🏁 Fine", style: TextStyle(fontSize: 11, fontWeight: FontWeight.w900, color: AppColors.error)),
@@ -394,7 +392,7 @@ class _BracketScreenState extends State<BracketScreen> {
                   const SizedBox(height: 12),
                 ],
               );
-            }).toList(),
+            }),
           ],
         ],
       ),

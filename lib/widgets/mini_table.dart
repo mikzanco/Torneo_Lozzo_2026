@@ -10,11 +10,11 @@ class MiniTable extends StatelessWidget {
   final List<MatchModel> matches;
 
   const MiniTable({
-    Key? key,
+    super.key,
     required this.group,
     required this.teams,
     required this.matches,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -95,7 +95,7 @@ class MiniTable extends StatelessWidget {
                   bottom: BorderSide(
                     color: i == rows.length - 1
                         ? Colors.transparent
-                        : AppColors.border.withOpacity(0.5),
+                        : AppColors.border.withValues(alpha: 0.5),
                   ),
                   left: leftBorderColor != null
                       ? BorderSide(color: leftBorderColor, width: 2)
