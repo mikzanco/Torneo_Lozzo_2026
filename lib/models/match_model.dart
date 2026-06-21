@@ -14,6 +14,8 @@ class MatchModel {
   int awayGoals;
   List<ScorerEvent> scorers;
   String? phase;         // "QF", "SF", "F" per partite KO
+  int homeFouls;
+  int awayFouls;
 
   MatchModel({
     required this.id,
@@ -27,6 +29,8 @@ class MatchModel {
     this.awayGoals = 0,
     this.scorers = const [],
     this.phase,
+    this.homeFouls = 0,
+    this.awayFouls = 0,
   });
 
   Map<String, dynamic> toJson() => {
@@ -41,6 +45,8 @@ class MatchModel {
         'awayGoals': awayGoals,
         'scorers': scorers.map((s) => s.toJson()).toList(),
         'phase': phase,
+        'homeFouls': homeFouls,
+        'awayFouls': awayFouls,
       };
 
   factory MatchModel.fromJson(Map<String, dynamic> j) => MatchModel(
@@ -60,5 +66,7 @@ class MatchModel {
             .map((s) => ScorerEvent.fromJson(s as Map<String, dynamic>))
             .toList(),
         phase: j['phase'] as String?,
+        homeFouls: j['homeFouls'] as int? ?? 0,
+        awayFouls: j['awayFouls'] as int? ?? 0,
       );
 }

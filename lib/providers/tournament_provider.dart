@@ -246,9 +246,47 @@ class TournamentProvider extends ChangeNotifier {
         awayGoals: awayG,
         scorers: newScorers,
         phase: match.phase,
+        homeFouls: match.homeFouls,
+        awayFouls: match.awayFouls,
       );
 
       triggerGoalFlash();
+      FirebaseFirestore.instance
+          .collection('matches')
+          .doc(matchId)
+          .set(updated.toJson());
+    }
+  }
+
+  void updateFouls(String matchId, String side, int delta) {
+    final idx = matches.indexWhere((m) => m.id == matchId);
+    if (idx != -1) {
+      final match = matches[idx];
+      int homeF = match.homeFouls;
+      int awayF = match.awayFouls;
+
+      if (side == 'home') {
+        homeF = (homeF + delta).clamp(0, 99);
+      } else {
+        awayF = (awayF + delta).clamp(0, 99);
+      }
+
+      final updated = MatchModel(
+        id: match.id,
+        group: match.group,
+        home: match.home,
+        away: match.away,
+        day: match.day,
+        time: match.time,
+        status: match.status,
+        homeGoals: match.homeGoals,
+        awayGoals: match.awayGoals,
+        scorers: match.scorers,
+        phase: match.phase,
+        homeFouls: homeF,
+        awayFouls: awayF,
+      );
+
       FirebaseFirestore.instance
           .collection('matches')
           .doc(matchId)
@@ -272,6 +310,8 @@ class TournamentProvider extends ChangeNotifier {
         awayGoals: match.awayGoals,
         scorers: match.scorers,
         phase: match.phase,
+        homeFouls: match.homeFouls,
+        awayFouls: match.awayFouls,
       );
 
       if (match.group == 'KO') {

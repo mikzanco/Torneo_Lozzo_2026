@@ -181,6 +181,64 @@ class _LiveCardState extends State<LiveCard> {
                         ),
                       ],
                     ),
+                    const SizedBox(height: 6),
+                    // Visualizzazione Falli
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: widget.match.homeFouls >= 5
+                                ? AppColors.error.withValues(alpha: 0.15)
+                                : AppColors.surfaceBg.withValues(alpha: 0.5),
+                            borderRadius: BorderRadius.circular(6),
+                            border: Border.all(
+                              color: widget.match.homeFouls >= 5
+                                  ? AppColors.error
+                                  : AppColors.border,
+                              width: 1,
+                            ),
+                          ),
+                          child: Text(
+                            "FALLI: ${widget.match.homeFouls}",
+                            style: TextStyle(
+                              fontSize: 9,
+                              fontWeight: FontWeight.w900,
+                              color: widget.match.homeFouls >= 5
+                                  ? AppColors.error
+                                  : AppColors.textSecondary,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: widget.match.awayFouls >= 5
+                                ? AppColors.error.withValues(alpha: 0.15)
+                                : AppColors.surfaceBg.withValues(alpha: 0.5),
+                            borderRadius: BorderRadius.circular(6),
+                            border: Border.all(
+                              color: widget.match.awayFouls >= 5
+                                  ? AppColors.error
+                                  : AppColors.border,
+                              width: 1,
+                            ),
+                          ),
+                          child: Text(
+                            "FALLI: ${widget.match.awayFouls}",
+                            style: TextStyle(
+                              fontSize: 9,
+                              fontWeight: FontWeight.w900,
+                              color: widget.match.awayFouls >= 5
+                                  ? AppColors.error
+                                  : AppColors.textSecondary,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
                 
@@ -393,7 +451,102 @@ class _LiveCardState extends State<LiveCard> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 12),
+                  // Gestione Falli Admin Row
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        "GESTIONE FALLI",
+                        style: TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          // Home team controls
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              GestureDetector(
+                                onTap: () => provider.updateFouls(widget.match.id, 'home', -1),
+                                child: Container(
+                                  padding: const EdgeInsets.all(6),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.surfaceBg,
+                                    shape: BoxShape.circle,
+                                    border: Border.all(color: AppColors.border),
+                                  ),
+                                  child: const Icon(Icons.remove, size: 14, color: AppColors.textPrimary),
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                "${widget.match.homeFouls}",
+                                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                              ),
+                              const SizedBox(width: 8),
+                              GestureDetector(
+                                onTap: () => provider.updateFouls(widget.match.id, 'home', 1),
+                                child: Container(
+                                  padding: const EdgeInsets.all(6),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.surfaceBg,
+                                    shape: BoxShape.circle,
+                                    border: Border.all(color: AppColors.border),
+                                  ),
+                                  child: const Icon(Icons.add, size: 14, color: AppColors.textPrimary),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(width: 16),
+                          const Text("VS", style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: AppColors.textTertiary)),
+                          const SizedBox(width: 16),
+                          // Away team controls
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              GestureDetector(
+                                onTap: () => provider.updateFouls(widget.match.id, 'away', -1),
+                                child: Container(
+                                  padding: const EdgeInsets.all(6),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.surfaceBg,
+                                    shape: BoxShape.circle,
+                                    border: Border.all(color: AppColors.border),
+                                  ),
+                                  child: const Icon(Icons.remove, size: 14, color: AppColors.textPrimary),
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                "${widget.match.awayFouls}",
+                                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                              ),
+                              const SizedBox(width: 8),
+                              GestureDetector(
+                                onTap: () => provider.updateFouls(widget.match.id, 'away', 1),
+                                child: Container(
+                                  padding: const EdgeInsets.all(6),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.surfaceBg,
+                                    shape: BoxShape.circle,
+                                    border: Border.all(color: AppColors.border),
+                                  ),
+                                  child: const Icon(Icons.add, size: 14, color: AppColors.textPrimary),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
                   
                   // End Match button
                   GestureDetector(
